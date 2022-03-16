@@ -143,10 +143,6 @@ app.post('/insertIntoLogin',(req, res)=> {
     let query = db.query(sql, (err, result) =>{
         if(err) throw err
         const results=JSON.parse(JSON.stringify(result))
-
-        console.log('***')
-        console.log(results[0].email)
-        console.log(req.body)
         if(results.length > 0){
 
             res.cookie('cookie',"admin",{maxAge: 900000, httpOnly: false, path : '/'});
@@ -160,6 +156,31 @@ app.post('/insertIntoLogin',(req, res)=> {
             res.send('Invalid Login')
     })
 });
+
+app.post('/insertIntoRegister', (req, res)=> {
+
+    var check = `SELECT firstname,email,password FROM Login WHERE email = "${req.body.email}" and password="${req.body.password}"`
+    db.query(check, (err, result) =>{
+        if(err) throw err
+        
+        const results = JSON.parse(JSON.stringify(result))
+        if(results.length > 0)
+        {
+            res.end('existing user')
+        }
+    })
+
+
+    console.log('hahaha')
+    console.log(req.body.name)
+    var insert = `INSERT INTO Login (firstname, email, password) VALUES ("${req.body.name}","${req.body.email}","${req.body.password}")`
+    db.query(insert, (err, result) =>{
+        if(err) throw err
+
+        const results=JSON.parse(JSON.stringify(result))
+        console.log(results)
+    })
+})
 
 //start your server on port 3001
 app.listen(3001);

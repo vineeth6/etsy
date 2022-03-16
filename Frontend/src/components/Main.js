@@ -9,6 +9,7 @@ import Profile from './Profile/Profile'
 import ShopProfile from './ShopProfile/ShopProfile'
 import ItemsPage from './ItemsPage/ItemsPage'
 import ItemDetails from './ItemDetails/ItemDetails'
+import register from './register/register'
 
 //Create a Main Component
 class Main extends Component {
@@ -24,7 +25,8 @@ class Main extends Component {
                 <Route path="/profile" component={Profile}/>
                 <Route path="/ShopProfile" component={ShopProfile}/>
                 <Route path="/ItemsPage" component={ItemsPage}/>
-                {/* <Route path="/ItemDetails">{ItemDetails}</Route> */}
+                <Route path="/register" component={register}/>
+                <Route path="/ItemDetails/:id" component={ItemDetails}> </Route>
             </div>
         )
     }

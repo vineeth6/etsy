@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import '../../App.css';
 import axios from 'axios';
 import cookie from 'react-cookies';
-import {Redirect} from 'react-router';
+import {Redirect, Link} from 'react-router-dom';
 
 //Define a Login Component
 class Login extends Component{
@@ -49,7 +49,6 @@ class Login extends Component{
             username : this.state.username,
             password : this.state.password
         }
-        console.log(cookie.load('cookie'))
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
@@ -100,7 +99,7 @@ class Login extends Component{
                                 <input onChange = {this.passwordChangeHandler} type="password" class="form-control" name="password" placeholder="Password"/>
                             </div>
                             <button onClick = {this.submitLogin} class="btn btn-primary">Login</button>
-                            {/* <li><Link to="/Register">Register</Link></li>                */}
+                            <Link to="/Register">Register</Link>              
                     </div>
                 </div>
             </div>

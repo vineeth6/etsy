@@ -3,6 +3,9 @@ import '../../App.css';
 import { Link } from "react-router-dom";
 
 class ShopProfile extends Component{
+    constructor(props){
+        super(props)
+    }
 
     render(){
         return(
@@ -23,7 +26,7 @@ class ShopProfile extends Component{
                                 <text>Shop Owner Details</text>
                                 <input type="text" class="form-control" name="city" placeholder="shop Owner"/>
                             </div>
-                            <Link to="/ItemsPage">Items Page</Link>
+                            <Link to="/ItemsPage/1">Items Page</Link>
                                           
                     </div>
                 </div>
