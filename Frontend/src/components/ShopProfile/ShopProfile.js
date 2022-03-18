@@ -26,6 +26,10 @@ class ShopProfile extends Component{
                                 <text>Shop Owner Details</text>
                                 <input type="text" class="form-control" name="city" placeholder="shop Owner"/>
                             </div>
+                            <div class="form-group">
+                                <text>Item List</text>
+                                <input type="text" class="form-control" name="city" placeholder="shop Owner"/>
+                            </div>
                             <Link to="/ItemsPage/1">Items Page</Link>
                                           
                     </div>

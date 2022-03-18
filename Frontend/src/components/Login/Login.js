@@ -55,11 +55,14 @@ class Login extends Component{
         axios.post('http://localhost:3001/insertIntoLogin',data)
             .then(response => {
                 console.log("Status Code : ",response.status);
-                if(response.data === "Successful Login"){
+                if(response.data === "Successful"){
                     this.setState({
                         authFlag : true,
                         error:""
                     })
+                    const {username} = this.state
+                    console.log(username)
+                    localStorage.setItem("email",username)
                     console.log(cookie.load('cookie'))
                 }else{
                     this.setState({

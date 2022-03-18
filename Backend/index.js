@@ -6,6 +6,8 @@ var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var cors = require('cors');
 var mysql = require('mysql')
+const generateUploadURL = require('./s3')
+
 app.set('view engine', 'ejs');
 app.set('views', './views');
 app.use(express.static(__dirname + '/public'));
@@ -179,6 +181,48 @@ app.post('/insertIntoRegister', (req, res)=> {
 
         const results=JSON.parse(JSON.stringify(result))
         console.log(results)
+    })
+})
+
+app.get('/s3Url', async(req, res) => {
+    console.log(req.query.imagename)
+    const url = await generateUploadURL.generateUploadURL(req.query.imagename)
+    console.log(url)
+    res.send({url})
+})
+
+app.post('/insertIntoItemInventory', (req, res) => {
+    console.log('inside item inventory post')
+    console.log(req.body)
+    var outofstock='false'
+    if(parseInt(req.body.quantity) <= 0)
+        outofstock=String(true)
+
+    console.log(outofstock)
+    var insert = `INSERT INTO ItemInventory (email, name, category, description, price, quantity, instock) VALUES ("${req.body.email}","${req.body.imagename}","${req.body.category}","${req.body.description}","${req.body.price}","${req.body.quantity}","${outofstock}")`
+    db.query(insert, (err, result) =>{
+        if(err) {
+            res.send("Unsuccessful")
+            throw err
+        }
+
+        res.send('successful')
+    })
+})
+
+app.get('/homeImages', (req,res) =>{
+    var getImageNames = `SELECT name FROM ItemInventory`
+    db.query(getImageNames, (err, result) =>{
+        if(err) throw err
+
+        const results=JSON.parse(JSON.stringify(result))
+        var msg=""
+        for(i in results){
+            msg=msg.concat(results[i].name)
+            msg=msg.concat(';')
+        }
+            
+        res.send(msg)
     })
 })
 
