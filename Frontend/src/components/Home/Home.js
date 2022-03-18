@@ -4,6 +4,7 @@ import axios from 'axios';
 import cookie from 'react-cookies';
 import {Redirect} from 'react-router';
 import FbImageGrid from 'react-fb-image-grid'
+import { Link } from "react-router-dom";
 
 class Home extends Component {
     constructor(){
@@ -44,7 +45,10 @@ class Home extends Component {
         return(
             <div>
                 {/* {redirectVar} */}
-                <FbImageGrid images={imageLinkArray}/>
+                <FbImageGrid 
+                images={imageLinkArray}
+                onClickEach={({src, index}) => {this.props.history.push('/ItemDetails/'.concat(imageNameArray[index]))}}
+                />
 
             </div> 
         )

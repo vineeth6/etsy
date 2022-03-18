@@ -8,6 +8,7 @@ class ShopProfile extends Component{
     }
 
     render(){
+        const sample = "/ItemsPage/hello"
         return(
             <div>
             <div class="container">
@@ -30,7 +31,7 @@ class ShopProfile extends Component{
                                 <text>Item List</text>
                                 <input type="text" class="form-control" name="city" placeholder="shop Owner"/>
                             </div>
-                            <Link to="/ItemsPage/1">Items Page</Link>
+                            <Link to={sample}>Items Page</Link>
                                           
                     </div>
                 </div>

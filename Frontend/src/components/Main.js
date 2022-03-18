@@ -26,7 +26,7 @@ class Main extends Component {
                 <Route path="/ShopProfile" component={ShopProfile}/>
                 <Route path="/ItemsPage" component={ItemsPage}/>
                 <Route path="/register" component={register}/>
-                <Route path="/ItemDetails/:id" component={ItemDetails}> </Route>
+                <Route path="/ItemDetails" component={ItemDetails}> </Route>
             </div>
         )
     }

@@ -113,7 +113,7 @@ class ItemsPage extends Component{
         // )
 
         const {error} = this.state
-
+        console.log(this.props.location.pathname)
         return(
             <div>
                 <div class='container'>

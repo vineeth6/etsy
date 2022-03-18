@@ -226,6 +226,22 @@ app.get('/homeImages', (req,res) =>{
     })
 })
 
+app.get('/ItemOverviewDetails', (req,res)=> {
+    console.log('Item Overview')
+    var getImageDetails = `SELECT * FROM ItemInventory where name="${req.query.imagename}" `
+    db.query(getImageDetails, (err, result) =>{
+        if(err) {
+            console.log("Unsuccessful in getting item Overview Details")
+            res.send("Unsuccessful")
+            throw err
+        }
+
+        const results=JSON.parse(JSON.stringify(result))
+        console.log(results[0].email)
+        res.send(results[0])
+    })
+})
+
 //start your server on port 3001
 app.listen(3001);
 console.log("Server Listening on port 3001");
