@@ -16,8 +16,8 @@ class ShopProfile extends Component{
                 <div class="login-form">
                     <div class="main-div">
                         <div class="panel">
-                            <h2>Admin Login</h2>
-                            <p>Please enter your username and password</p>
+                            <h2>Shop Detaile</h2>
+                            <p>Please enter your shop details</p>
                         </div>
                             <div class="form-group">
                                 <text>Shop Name</text>
