@@ -210,6 +210,20 @@ app.post('/insertIntoItemInventory', (req, res) => {
     })
 })
 
+app.post('/InsertIntoProfile', (req,res) => {
+    console.log("inside profile")
+    console.log(req.body)
+    var insert = `INSERT INTO UserProfile (email, username, profilepic, gender, birthdate, address, city, country, phonenumber, purchasehistory) VALUES ("${req.body.email}","${req.body.username}"," ","${req.body.gender}","${req.body.birthdate}","${req.body.address}","${req.body.city}","${req.body.country}","${req.body.phone}","")`
+    db.query(insert, (err, result) =>{
+        if(err) {
+            res.send("Unsuccessful")
+            throw err
+        }
+
+        res.send('successful')
+    })
+})
+
 app.get('/homeImages', (req,res) =>{
     var getImageNames = `SELECT name FROM ItemInventory`
     db.query(getImageNames, (err, result) =>{
@@ -240,6 +254,27 @@ app.get('/ItemOverviewDetails', (req,res)=> {
         console.log(results[0].email)
         res.send(results[0])
     })
+})
+
+app.get('/getProfileDetails', (req,res)=> {
+    console.log('Profile Overview')
+    var getImageDetails = `SELECT * FROM UserProfile where email="${req.query.email}" `
+    try{
+    db.query(getImageDetails, (err, result) =>{
+        if(err) {
+            console.log("Unsuccessful in getting item Overview Details")
+            res.send("Unsuccessful")
+            throw err
+        }
+
+        const results=JSON.parse(JSON.stringify(result))
+        console.log(results[0].email)
+        res.send(results[0])
+    })
+    }
+    catch(err){
+        next(err)
+    }
 })
 
 //start your server on port 3001

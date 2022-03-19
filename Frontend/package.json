@@ -10,6 +10,7 @@
     "react-aws-s3": "^1.5.0",
     "react-cookie": "^3.0.4",
     "react-cookies": "^0.1.0",
+    "react-country-dropdown": "^1.0.4",
     "react-country-region-selector": "^3.4.0",
     "react-dom": "^16.5.0",
     "react-fb-image-grid": "^0.1.5",

@@ -7,8 +7,8 @@ import FbImageGrid from 'react-fb-image-grid'
 import { Link } from "react-router-dom";
 
 class Home extends Component {
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state = {  
             image:""
         }
