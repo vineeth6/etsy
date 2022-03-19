@@ -9,10 +9,44 @@ class ItemDetails extends Component{
 
         this.state={
             itemName:this.props.location.pathname.split('/')[2],
-            itemPrice:"",
-            quantityAvailable:""
+            itemPrice:"0",
+            quantityDemand:"1"
         }
 
+        this.onQuantityChange = this.onQuantityChange.bind(this)
+        this.addToCart = this.addToCart.bind(this)
+    }
+
+    onQuantityChange = (e) =>{
+        this.setState({quantityDemand:e.target.value})
+    }
+
+    addToCart = (e)=>{
+        e.preventDefault()
+        const quantity = parseInt(this.state.quantityDemand)
+        console.log(this.state.itemPrice)
+        const price = quantity*parseInt(this.state.itemPrice)
+
+        var list1=[]
+
+
+        if(localStorage.getItem('cartDetails') === null)
+        {
+            localStorage.setItem("cartDetails", JSON.stringify(list1))
+        }
+
+        console.log(quantity)
+        console.log(price)
+        if(quantity>0 && price>0){
+            var storedCart = JSON.parse(localStorage.getItem("cartDetails"))
+
+            var element = {itemName:this.state.itemName, itemQuantity:this.state.quantityDemand, itemPrice:price}
+            storedCart.push(element)
+
+            console.log(storedCart)
+
+            localStorage.setItem("cartDetails", JSON.stringify(storedCart))
+        }
     }
 
     componentDidMount(){
@@ -34,12 +68,7 @@ class ItemDetails extends Component{
     }
 
     render(){
-        const imageLinkArray =[
-            'https://etsyitemimages.s3.amazonaws.com/'.concat(this.state.itemName)
-        ]
-
         const{itemName,itemPrice} = this.state
-        
         return (
             <div>
                     <div class='container' style={{maxWidth: "300px", margin: "auto"}}>
@@ -48,7 +77,7 @@ class ItemDetails extends Component{
                             <div class="panel">
                                 <h2>Item Overview</h2>
                             </div>
-                            <FbImageGrid images={imageLinkArray}  width={50} height={50}/>
+                            <img src={'https://etsyitemimages.s3.amazonaws.com/'.concat(itemName)} height='400' width='350'></img>
                             <div class="form-group">
                                 <text class="form-group">Item name : {itemName}</text>
                             </div>
@@ -59,7 +88,7 @@ class ItemDetails extends Component{
                                 <input type='text' class="form-group" onChange={this.onQuantityChange} placeholder="Item Quantity"/>
                             </div>
                             <div class="form-group">
-                                <button class="form-group" onClick={this.Upload}>Add to cart</button>
+                                <button class="form-group" onClick={this.addToCart}>Add to cart</button>
                             </div>
 
                         </div>

@@ -33,23 +33,26 @@ class Profile extends Component{
     }
 
     componentDidMount(){
-        axios.get('/getProfileDetails', {
-            params:{
-                email:this.state.email
-            }
-        })
-        .then((response) => {
-            console.log(response.data)
-            this.setState({
-                username:response.data.username,
-                gender : response.data.gender,
-                birthdate: response.data.birthdate,
-                address: response.data.address,
-                city:response.data.city,
-                country:response.data.country,
-                phone:response.data.phonenumber
+
+        if(localStorage.getItem("userProfile") === "true"){
+            axios.get('/getProfileDetails', {
+                params:{
+                    email:this.state.email
+                }
             })
-        })
+            .then((response) => {
+                console.log(response.data)
+                this.setState({
+                    username:response.data.username,
+                    gender : response.data.gender,
+                    birthdate: response.data.birthdate,
+                    address: response.data.address,
+                    city:response.data.city,
+                    country:response.data.country,
+                    phone:response.data.phonenumber
+                })
+            })
+        }
     }
 
     changeUsername = (e) => {
@@ -64,7 +67,7 @@ class Profile extends Component{
         else if(e.target.value === "Female")
             this.setState({gender:"Female"})
         else if(e.target.value === "Other")
-        this.setState({gender:"Other"})
+            this.setState({gender:"Other"})
     }
 
     changeBirthdate = (e) =>{
@@ -106,6 +109,8 @@ class Profile extends Component{
         .then(response => {
             console.log(response)
         })
+
+        localStorage.setItem("userProfile","true")
     }
 
     render(){

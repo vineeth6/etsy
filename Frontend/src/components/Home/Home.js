@@ -27,14 +27,12 @@ class Home extends Component {
     render(){
         //iterate over books to create a table row
         const{image} = this.state
+        console.log(this.props)
         const imageLinkArray = [
         ]
         var imageNameArray = image.split(';')
         imageNameArray.pop()
         console.log(imageNameArray)
-        imageNameArray.forEach(function(imagename){
-            imageLinkArray.push('https://etsyitemimages.s3.amazonaws.com/'.concat(imagename))
-        })
 
 
         //if not logged in go to login page
@@ -43,12 +41,18 @@ class Home extends Component {
             redirectVar = <Redirect to= "/login"/>
         }
         return(
-            <div>
-                {/* {redirectVar} */}
-                <FbImageGrid 
-                images={imageLinkArray}
-                onClickEach={({src, index}) => {this.props.history.push('/ItemDetails/'.concat(imageNameArray[index]))}}
-                />
+            <div style={{width:"1200px", margin:"auto", display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:"10px"}}>
+                {imageNameArray.map((imagename) => (
+                    <div 
+                    style={{border:"1px solid #000", display:"flex", flexDirection:"column", justifyContent:"center",  cursor:"pointer"}} 
+                    onClick={()=>( this.props.history.push('/ItemDetails/'.concat(imagename)))}>
+                    <img 
+                    src={'https://etsyitemimages.s3.amazonaws.com/'.concat(imagename)}
+                    style={{width: "300px"}}
+                    />
+                    </div>
+                    )
+                )}
 
             </div> 
         )

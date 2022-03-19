@@ -211,7 +211,6 @@ app.post('/insertIntoItemInventory', (req, res) => {
 })
 
 app.post('/InsertIntoProfile', (req,res) => {
-    console.log("inside profile")
     console.log(req.body)
     var insert = `INSERT INTO UserProfile (email, username, profilepic, gender, birthdate, address, city, country, phonenumber, purchasehistory) VALUES ("${req.body.email}","${req.body.username}"," ","${req.body.gender}","${req.body.birthdate}","${req.body.address}","${req.body.city}","${req.body.country}","${req.body.phone}","")`
     db.query(insert, (err, result) =>{
@@ -221,6 +220,63 @@ app.post('/InsertIntoProfile', (req,res) => {
         }
 
         res.send('successful')
+    })
+})
+
+app.post('/insertShopDetails', (req,res) => {
+    console.log(req.body)
+    var insert = `INSERT INTO ShopDetails (email,shopImage,shopName,shopOwner) VALUES ("${req.body.email}","","${req.body.shopName}","${req.body.shopOwner}")`
+    db.query(insert, (err, result) =>{
+        if(err) {
+            res.send("Unsuccessful")
+            throw err
+        }
+
+        res.send('successful')
+    })
+})
+
+app.post('/createTransactionID',(req, res) =>{
+    //console.log(req.body)
+    var insert = `INSERT INTO TransactionID (email) VALUES ("${req.body.email}")`
+    db.query(insert, (err, result) =>{
+        if(err) {
+            res.send("Unsuccessful")
+            throw err
+        }
+
+        res.send('successful')
+    })
+})
+
+app.post('/insertIntoTransaction', (req, res)=>{
+    console.log(req.body)
+    
+    let selectId = "SELECT MAX(ID) as maxID FROM TransactionID";
+    var max = []
+    db.query(selectId, (err, result) =>{
+        if(err) {
+            res.send("Unsuccessful")
+            throw err
+        }
+
+        var orderId = result[0].maxID
+        var email = req.body.email
+        var transactionDetails = req.body.cartDetails
+        console.log(transactionDetails)
+        
+        transactionDetails.forEach(transaction => {
+            var insert = `INSERT INTO Transactions(customerEmail,orderID,itemName,quantity,shopname,price,date) VALUES ("${email}","${orderId}","${transaction.itemName}","${transaction.itemQuantity}","","${transaction.itemPrice}","")`
+            db.query(insert, (err, result) =>{
+                if(err) {
+                    //res.send("Unsuccessful")
+                    throw err
+                }
+        
+                //res.send('successful')
+            })
+        })
+        // var insert = `INSERT INTO Transactions()`
     })
 })
 
@@ -238,6 +294,29 @@ app.get('/homeImages', (req,res) =>{
             
         res.send(msg)
     })
+})
+
+app.get('/searchResults', (req,res)=> {
+    console.log("hehehe")
+    console.log(req.query.imageLike)
+    var dbquery = `SELECT name FROM ItemInventory`
+    db.query(dbquery, (err, result) =>{
+        if(err) throw err
+
+        const results=JSON.parse(JSON.stringify(result))
+        
+        var msg=""
+        for(i in results){
+            if(result[i].name.includes(req.query.imageLike)){
+            msg=msg.concat(results[i].name)
+            msg=msg.concat(';')
+            }
+        }
+            
+        console.log(msg)
+        res.send(msg)
+    })
+
 })
 
 app.get('/ItemOverviewDetails', (req,res)=> {
@@ -263,6 +342,27 @@ app.get('/getProfileDetails', (req,res)=> {
     db.query(getImageDetails, (err, result) =>{
         if(err) {
             console.log("Unsuccessful in getting item Overview Details")
+            res.send("Unsuccessful")
+            throw err
+        }
+
+        const results=JSON.parse(JSON.stringify(result))
+        console.log(results[0].email)
+        res.send(results[0])
+    })
+    }
+    catch(err){
+        next(err)
+    }
+})
+
+app.get('/getShopDetails', (req,res)=> {
+    console.log('Shop Overview')
+    var getShopDetails = `SELECT * FROM ShopDetails where email="${req.query.email}" `
+    try{
+    db.query(getShopDetails, (err, result) =>{
+        if(err) {
+            console.log("Unsuccessful in getting shop Details")
             res.send("Unsuccessful")
             throw err
         }

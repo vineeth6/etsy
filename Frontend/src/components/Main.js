@@ -10,6 +10,9 @@ import ShopProfile from './ShopProfile/ShopProfile'
 import ItemsPage from './ItemsPage/ItemsPage'
 import ItemDetails from './ItemDetails/ItemDetails'
 import register from './register/register'
+import Cart from './Cart/Cart'
+import PurchasePage from './PurchasePage/PurchasePage'
+import searchResults from './searchResults/searchResults'
 
 //Create a Main Component
 class Main extends Component {
@@ -27,6 +30,9 @@ class Main extends Component {
                 <Route path="/ItemsPage" component={ItemsPage}/>
                 <Route path="/register" component={register}/>
                 <Route path="/ItemDetails" component={ItemDetails}> </Route>
+                <Route path="/Cart" component={Cart}/>
+                <Route path="/PurchasePage" component={PurchasePage}/>
+                <Route path="/searchResults" component={searchResults}/>
             </div>
         )
     }
