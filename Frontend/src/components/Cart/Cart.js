@@ -4,7 +4,6 @@ import axios from 'axios';
 class Cart extends Component{
     constructor(props){
         super(props)
-
         this.clearCart = this.clearCart.bind(this)
         this.buy = this.buy.bind(this)
     }
@@ -24,7 +23,7 @@ class Cart extends Component{
 
     buy = (e) => {
         e.preventDefault()
-
+        if(localStorage.getItem('cartDetails') !== null){
         const data = {
             email:localStorage.getItem('email'),
             cartDetails:JSON.parse(localStorage.getItem('cartDetails')),
@@ -41,8 +40,9 @@ class Cart extends Component{
             console.log(response)
         })
 
-        //localStorage.removeItem('cartDetails')
-        //this.props.history.push('/PurchasePage')
+        localStorage.removeItem('cartDetails')
+        this.props.history.push('/PurchasePage')
+    }
     }
 
     render(){

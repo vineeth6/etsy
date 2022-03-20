@@ -54,8 +54,6 @@ class register extends Component{
                 this.setState({
                     error:"Registration Successful"
                 })
-                localStorage.setItem("UserProfile","false")
-                localStorage.setItem("ShopProfile", "false")
             }
             else if(response.data === 'existing user'){
                 this.setState({
@@ -68,6 +66,8 @@ class register extends Component{
                 })
             }
         });
+        localStorage.setItem("UserProfile","false")
+        localStorage.setItem("ShopProfile", "false")
     }
 
     render(){

@@ -15,6 +15,12 @@ class ItemDetails extends Component{
 
         this.onQuantityChange = this.onQuantityChange.bind(this)
         this.addToCart = this.addToCart.bind(this)
+        this.addToFavorites = this.addToFavorites.bind(this)
+    }
+
+    addToFavorites = (e) => {
+        e.preventDefault()
+        localStorage.setItem('favorites', this.state.itemName)
     }
 
     onQuantityChange = (e) =>{
@@ -89,6 +95,9 @@ class ItemDetails extends Component{
                             </div>
                             <div class="form-group">
                                 <button class="form-group" onClick={this.addToCart}>Add to cart</button>
+                            </div>
+                            <div class="form-group">
+                                <button class="form-group" onClick={this.addToFavorites}>Favorites</button>
                             </div>
 
                         </div>

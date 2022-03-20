@@ -212,7 +212,7 @@ app.post('/insertIntoItemInventory', (req, res) => {
 
 app.post('/InsertIntoProfile', (req,res) => {
     console.log(req.body)
-    var insert = `INSERT INTO UserProfile (email, username, profilepic, gender, birthdate, address, city, country, phonenumber, purchasehistory) VALUES ("${req.body.email}","${req.body.username}"," ","${req.body.gender}","${req.body.birthdate}","${req.body.address}","${req.body.city}","${req.body.country}","${req.body.phone}","")`
+    var insert = `REPLACE INTO UserProfile (email, username, profilepic, gender, birthdate, address, city, country, phonenumber, purchasehistory) VALUES ("${req.body.email}","${req.body.username}"," ","${req.body.gender}","${req.body.birthdate}","${req.body.address}","${req.body.city}","${req.body.country}","${req.body.phone}","")`
     db.query(insert, (err, result) =>{
         if(err) {
             res.send("Unsuccessful")
@@ -225,13 +225,15 @@ app.post('/InsertIntoProfile', (req,res) => {
 
 app.post('/insertShopDetails', (req,res) => {
     console.log(req.body)
-    var insert = `INSERT INTO ShopDetails (email,shopImage,shopName,shopOwner) VALUES ("${req.body.email}","","${req.body.shopName}","${req.body.shopOwner}")`
+    var insert = `REPLACE INTO ShopDetails (email,shopImage,shopName,shopOwner) VALUES ("${req.body.email}","","${req.body.shopName}","${req.body.shopOwner}")`
     db.query(insert, (err, result) =>{
         if(err) {
             res.send("Unsuccessful")
+            console.log('error')
             throw err
         }
 
+        console.log(result)
         res.send('successful')
     })
 })
@@ -264,7 +266,7 @@ app.post('/insertIntoTransaction', (req, res)=>{
         var email = req.body.email
         var transactionDetails = req.body.cartDetails
         console.log(transactionDetails)
-        
+        console.log(email)
         transactionDetails.forEach(transaction => {
             var insert = `INSERT INTO Transactions(customerEmail,orderID,itemName,quantity,shopname,price,date) VALUES ("${email}","${orderId}","${transaction.itemName}","${transaction.itemQuantity}","","${transaction.itemPrice}","")`
             db.query(insert, (err, result) =>{
@@ -294,6 +296,21 @@ app.get('/homeImages', (req,res) =>{
             
         res.send(msg)
     })
+})
+
+app.get('/getTransactionDetails', (req,res)=>{
+    console.log('inside transaction details')
+    console.log(req.body)
+    var transactions = `SELECT * FROM Transactions WHERE customerEmail="${req.query.email}"`
+    db.query(transactions, (err, result) =>{
+        console.log('I am here')
+        if(err) throw err
+
+        const results=JSON.parse(JSON.stringify(result))
+        console.log(results)
+        res.send(results)
+    })
+
 })
 
 app.get('/searchResults', (req,res)=> {

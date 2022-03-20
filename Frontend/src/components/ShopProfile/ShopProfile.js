@@ -15,21 +15,31 @@ class ShopProfile extends Component{
         this.onShopNameChange = this.onShopNameChange.bind(this)
         this.onShopOwnerDetails = this.onShopOwnerDetails.bind(this)
         this.updateShopDetails = this.updateShopDetails.bind(this)
+        this.onFileChange = this.onFileChange.bind(this)
     }
 
     componentDidMount(){
-        Axios.get('/getShopDetails', {
-            params:{
-                email:localStorage.getItem('email')
-            }
-        })
-        .then((response)=>{
-            console.log(response)
-            this.setState({
-                shopName:response.data.shopName,
-                shopOwner:response.data.shopOwner
+        if(localStorage.getItem('ShopProfile') === 'true'){
+            Axios.get('/getShopDetails', {
+                params:{
+                    email:localStorage.getItem('email')
+                }
             })
-        })
+            .then((response)=>{
+                console.log(response)
+                this.setState({
+                    shopName:response.data.shopName,
+                    shopOwner:response.data.shopOwner
+                })
+                console.log(this.state)
+            })
+        }
+    }
+
+    onFileChange = (e) => {
+        e.preventDefault()
+        console.log(e.target.files)
+        localStorage.setItem("imageurl",'profile')
     }
 
     onShopNameChange = (e) => {
@@ -53,6 +63,7 @@ class ShopProfile extends Component{
             console.log(response)
         })
 
+        localStorage.setItem("ShopProfile", "true")
     }
 
     render(){
@@ -66,6 +77,10 @@ class ShopProfile extends Component{
                             <h2>Shop Detaile</h2>
                             <p>Please enter your shop details</p>
                         </div>
+                        <img src={'https://etsyitemimages.s3.amazonaws.com/'.concat(localStorage.getItem('imageurl'))} height='100' width='100'></img>
+                            <div class="form-group">
+                                <input type='file' class="form-group" onChange={this.onFileChange}/>
+                            </div>
                             <div class="form-group">
                                 <text>Shop Name</text>
                                 <input type="text" onChange={this.onShopNameChange} class="form-control" name="shop name" value={this.state.shopName}/>

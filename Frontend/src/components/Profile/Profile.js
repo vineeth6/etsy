@@ -34,7 +34,7 @@ class Profile extends Component{
 
     componentDidMount(){
 
-        if(localStorage.getItem("userProfile") === "true"){
+        if(localStorage.getItem("UserProfile") === "true"){
             axios.get('/getProfileDetails', {
                 params:{
                     email:this.state.email
@@ -110,7 +110,7 @@ class Profile extends Component{
             console.log(response)
         })
 
-        localStorage.setItem("userProfile","true")
+        localStorage.setItem("UserProfile","true")
     }
 
     render(){

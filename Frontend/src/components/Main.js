@@ -13,6 +13,7 @@ import register from './register/register'
 import Cart from './Cart/Cart'
 import PurchasePage from './PurchasePage/PurchasePage'
 import searchResults from './searchResults/searchResults'
+import favorites from './favorites/favorites'
 
 //Create a Main Component
 class Main extends Component {
@@ -33,6 +34,7 @@ class Main extends Component {
                 <Route path="/Cart" component={Cart}/>
                 <Route path="/PurchasePage" component={PurchasePage}/>
                 <Route path="/searchResults" component={searchResults}/>
+                <Route path="/favorites" component={favorites}/>
             </div>
         )
     }

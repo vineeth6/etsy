@@ -51,9 +51,9 @@ class Navbar extends Component {
             )
         }
         let redirectVar = null;
-        if(cookie.load('cookie')){
+        // if(cookie.load('cookie')){
             redirectVar = <Redirect to="/home"/>
-        }
+        // }
         return(
             <div>
                 {redirectVar}
@@ -65,6 +65,7 @@ class Navbar extends Component {
                     <ul class="nav navbar-nav">
                         <li class="active"><Link to="/home">Home</Link></li>
                         <li><Link to="/Profile">Profile</Link></li>
+                        <li><Link to="/favorites">Favorites</Link></li>
                         <li><input type="text" onChange={this.changeText}/></li>
                         <li><button onClick={this.search}> Search</button></li>
                         <li><Link to="/ShopProfile">Shop Profile</Link></li>
