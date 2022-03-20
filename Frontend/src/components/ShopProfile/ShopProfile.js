@@ -10,6 +10,7 @@ class ShopProfile extends Component{
         this.state = {
             shopName:"",
             shopOwner:"",
+            error:"",
         }
 
         this.onShopNameChange = this.onShopNameChange.bind(this)
@@ -66,6 +67,25 @@ class ShopProfile extends Component{
         localStorage.setItem("ShopProfile", "true")
     }
 
+    checkAvailability = (e)=>{
+        e.preventDefault()
+        Axios.get('/checkAvailability', {
+                params:{
+                    shopName:this.state.shopName
+                }
+            }
+        )
+        .then((response) => {
+            console.log(response)
+            if(response.data === "Available"){
+                this.setState({error:"Shop Name Available"})
+            }
+            else{
+                this.setState({error:"Shop Name Not Available"})
+            }
+        })
+    }
+
     render(){
         return(
             <div>
@@ -84,6 +104,8 @@ class ShopProfile extends Component{
                             <div class="form-group">
                                 <text>Shop Name</text>
                                 <input type="text" onChange={this.onShopNameChange} class="form-control" name="shop name" value={this.state.shopName}/>
+                                <button onClick={this.checkAvailability}>Check Availability</button>
+                                <div style={{ color: "red" }}>{this.state.error}</div> 
                             </div>
                             <div class="form-group">
                                 <text>Shop Owner Details</text>

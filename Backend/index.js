@@ -394,6 +394,28 @@ app.get('/getShopDetails', (req,res)=> {
     }
 })
 
+app.get('/checkAvailability', (req,res) => {
+    console.log("inside check Availability")
+    console.log(req.query.shopName)
+    try{
+        var check = `SELECT * FROM ShopDetails WHERE shopName="${req.query.shopName}"`
+        db.query(check, (err, result) =>{
+            if(err) {
+                console.log("Not Available")
+                res.send("Not Available")
+                throw err
+            }
+            if(result.length == 0)
+                res.send("Available")
+            else
+                res.send("Not Available")
+        })
+    }
+    catch(err){
+        next(err)
+    }
+})
+
 //start your server on port 3001
 app.listen(3001);
 console.log("Server Listening on port 3001");
