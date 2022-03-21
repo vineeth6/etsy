@@ -5,7 +5,8 @@ class searchResults extends Component{
     constructor(props){
         super(props)
         this.state = {
-            image:""
+            image:"",
+            error:""
         }
     }
 
@@ -32,10 +33,9 @@ class searchResults extends Component{
         var imageNameArray = image.split(';')
         imageNameArray.pop()
         console.log(imageNameArray)
-
-
         //if not logged in go to login page
         return(
+            <div>
             <div style={{width:"1200px", margin:"auto", display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:"10px"}}>
                 {imageNameArray.map((imagename) => (
                     <div 
@@ -50,6 +50,8 @@ class searchResults extends Component{
                 )}
 
             </div> 
+             <div style={{ color: "red" }}>{this.state.error}</div>
+             </div>
         )
     }
 }

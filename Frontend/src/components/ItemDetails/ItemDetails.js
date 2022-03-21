@@ -10,7 +10,9 @@ class ItemDetails extends Component{
         this.state={
             itemName:this.props.location.pathname.split('/')[2],
             itemPrice:"0",
-            quantityDemand:"1"
+            quantityDemand:"1",
+            error1:"",
+            error2:""
         }
 
         this.onQuantityChange = this.onQuantityChange.bind(this)
@@ -31,7 +33,7 @@ class ItemDetails extends Component{
         e.preventDefault()
         const quantity = parseInt(this.state.quantityDemand)
         console.log(this.state.itemPrice)
-        const price = quantity*parseInt(this.state.itemPrice)
+        const price = quantity*parseFloat(this.state.itemPrice)
 
         var list1=[]
 
@@ -53,6 +55,12 @@ class ItemDetails extends Component{
 
             localStorage.setItem("cartDetails", JSON.stringify(storedCart))
         }
+
+        if(this.state.itemName === "X1-Table")
+            localStorage.setItem("stock1",'')
+
+        if(this.state.itemName === "Glass Photo Frame")
+            localStorage.setItem("stock2",'')
     }
 
     componentDidMount(){
@@ -71,10 +79,21 @@ class ItemDetails extends Component{
                 quantityAvailable:response.data.quantityAvailable
             })
         })
+
+        if(localStorage.getItem("stock1")!==null){
+            if(this.state.itemName === "X1-Table")
+                this.setState({error1:"OutOfStock"})
+        }
+
+        if(localStorage.getItem("stock2")!==null){
+            if(this.state.itemName === "Glass Photo Frame")
+            this.setState({error2:"OutOfStock"})
+        }
     }
 
     render(){
         const{itemName,itemPrice} = this.state
+            
         return (
             <div>
                     <div class='container' style={{maxWidth: "300px", margin: "auto"}}>
@@ -91,8 +110,13 @@ class ItemDetails extends Component{
                                 <text class="form-group">Item Price : {itemPrice}</text>
                             </div>
                             <div class="form-group">
+                                <text class="form-group">Shop Name : {localStorage.getItem('shName')}</text>
+                            </div>
+                            <div class="form-group">
                                 <input type='text' class="form-group" onChange={this.onQuantityChange} placeholder="Item Quantity"/>
                             </div>
+                            <div style={{ color: "red" }}>{this.state.error1}</div>
+                            <div style={{ color: "red" }}>{this.state.error2}</div>
                             <div class="form-group">
                                 <button class="form-group" onClick={this.addToCart}>Add to cart</button>
                             </div>

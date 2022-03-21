@@ -32,7 +32,6 @@ class Cart extends Component{
         .then((response)=>{
             console.log(response)
         })
-
         let cartDetails = JSON.parse(localStorage.getItem('cartDetails'))
         console.log(cartDetails)
         axios.post('/insertIntoTransaction',data)
@@ -52,7 +51,7 @@ class Cart extends Component{
             let cartDetails = JSON.parse(localStorage.getItem('cartDetails'))
             console.log(cartDetails)
             details = cartDetails.map(item => {
-                totalPrice += parseInt(item.itemPrice)
+                totalPrice += parseFloat(item.itemPrice)
                 return(
                     <tr>
                         <td>{item.itemName}</td>

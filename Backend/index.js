@@ -194,12 +194,7 @@ app.get('/s3Url', async(req, res) => {
 app.post('/insertIntoItemInventory', (req, res) => {
     console.log('inside item inventory post')
     console.log(req.body)
-    var outofstock='false'
-    if(parseInt(req.body.quantity) <= 0)
-        outofstock=String(true)
-
-    console.log(outofstock)
-    var insert = `INSERT INTO ItemInventory (email, name, category, description, price, quantity, instock) VALUES ("${req.body.email}","${req.body.imagename}","${req.body.category}","${req.body.description}","${req.body.price}","${req.body.quantity}","${outofstock}")`
+    var insert = `INSERT INTO ItemInventory (email, name, category, description, price, quantity, instock) VALUES ("${req.body.email}","${req.body.imagename}","${req.body.category}","${req.body.description}","${req.body.price}","${req.body.quantity}","${req.body.outofstock}")`
     db.query(insert, (err, result) =>{
         if(err) {
             res.send("Unsuccessful")
@@ -249,6 +244,31 @@ app.post('/createTransactionID',(req, res) =>{
 
         res.send('successful')
     })
+})
+
+app.post('/editItemPrice', (req, res) => {
+    console.log(req.body)
+    try{
+        var update = `SET SQL_SAFE_UPDATES = 0`
+            db.query(update, (err, result) =>{
+                if(err) {
+                    console.log(err)
+                    res.send("Unsuccessful")
+                    throw err
+                }
+                var update1=`UPDATE ItemInventory SET price="${req.body.itemPrice}" WHERE name="${req.body.itemName}"`
+                db.query(update1, (err, result) =>{
+                    if(err) {
+                        console.log(err)
+                        res.send("Unsuccessful")
+                        throw err
+                    }
+                })
+                res.send('success')
+            })
+    }catch(err){
+        next(err)
+    }
 })
 
 app.post('/insertIntoTransaction', (req, res)=>{

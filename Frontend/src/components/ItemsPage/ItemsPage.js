@@ -59,7 +59,8 @@ class ItemsPage extends Component{
             description:this.state.description,
             price: this.state.price,
             quantity:this.state.quantity,
-            category:this.state.category
+            category:this.state.category,
+            outofstock:"false"
         }
         axios.get('/s3Url', {
             params : {
@@ -99,6 +100,11 @@ class ItemsPage extends Component{
                     this.setState({error:"Unable to insert"})
                 }
             })
+
+            const data1 = {
+                shopName:localStorage.getItem('shName')
+            }
+
 
         })
 

@@ -20,6 +20,7 @@ class ShopProfile extends Component{
     }
 
     componentDidMount(){
+        localStorage.setItem("shName",this.state.shopName)
         if(localStorage.getItem('ShopProfile') === 'true'){
             Axios.get('/getShopDetails', {
                 params:{
@@ -65,6 +66,7 @@ class ShopProfile extends Component{
         })
 
         localStorage.setItem("ShopProfile", "true")
+        localStorage.setItem("shName",this.state.shopName)
     }
 
     checkAvailability = (e)=>{
@@ -114,8 +116,12 @@ class ShopProfile extends Component{
                             <div class="form-group">
                                 <button class="form-group" onClick={this.updateShopDetails} class="btn btn-primary">Update Shop Details</button>
                             </div>
-                            <Link to="/ItemsPage">Add new Items</Link>
-                                          
+                            <div>
+                                <Link to="/ItemsPage">Add new Items</Link>
+                            </div>
+                            <div>
+                                <Link to="/Delete">Edit Existing Items</Link> 
+                            </div>           
                     </div>
                 </div>
             </div>

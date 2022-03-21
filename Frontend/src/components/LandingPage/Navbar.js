@@ -17,7 +17,10 @@ class Navbar extends Component {
         this.search = this.search.bind(this)
     }
     //handle logout to destroy the cookie
-    handleLogout = () => {
+    handleLogout = (e) => {
+        localStorage.removeItem("email")
+        localStorage.removeItem("stock1")
+        localStorage.removeItem('stock2')
         cookie.remove('cookie', { path: '/' })
     }
     changeText = (e) => {
@@ -70,6 +73,7 @@ class Navbar extends Component {
                         <li><button onClick={this.search}> Search</button></li>
                         <li><Link to="/ShopProfile">Shop Profile</Link></li>
                         <li><Link to="/Cart">Shopping Cart</Link></li>
+                        <li><Link to='/PurchasePage'>Order History</Link></li>
                     </ul>
                     {navLogin}
                 </div>
