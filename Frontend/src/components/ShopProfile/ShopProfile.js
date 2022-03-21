@@ -22,7 +22,7 @@ class ShopProfile extends Component{
     componentDidMount(){
         localStorage.setItem("shName",this.state.shopName)
         if(localStorage.getItem('ShopProfile') === 'true'){
-            Axios.get('/getShopDetails', {
+            Axios.get(process.env.REACT_APP_BASE_URL+'/getShopDetails', {
                 params:{
                     email:localStorage.getItem('email')
                 }
@@ -60,7 +60,7 @@ class ShopProfile extends Component{
             shopOwner : this.state.shopOwner
         }
         console.log(data)
-        Axios.post("/insertShopDetails",data)
+        Axios.post(process.env.REACT_APP_BASE_URL+"/insertShopDetails",data)
         .then((response) => {
             console.log(response)
         })
@@ -71,7 +71,7 @@ class ShopProfile extends Component{
 
     checkAvailability = (e)=>{
         e.preventDefault()
-        Axios.get('/checkAvailability', {
+        Axios.get(process.env.REACT_APP_BASE_URL+'/checkAvailability', {
                 params:{
                     shopName:this.state.shopName
                 }

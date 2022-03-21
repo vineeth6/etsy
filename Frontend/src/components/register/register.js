@@ -47,7 +47,7 @@ class register extends Component{
 
 
 
-        axios.post('http://localhost:3001/insertIntoRegister',data)
+        axios.post(process.env.REACT_APP_BASE_URL+'/insertIntoRegister',data)
         .then(response => {
             console.log("Status Code : ",response.status);
             if(response.data === "Successful Register"){

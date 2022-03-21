@@ -12,7 +12,7 @@ class searchResults extends Component{
 
     componentDidMount(){
         console.log(this.props.location.pathname.split('/')[2])
-        axios.get('/searchResults',{
+        axios.get(process.env.REACT_APP_BASE_URL+'/searchResults',{
             params:{
                 imageLike : this.props.location.pathname.split('/')[2]
             }

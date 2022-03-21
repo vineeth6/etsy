@@ -65,7 +65,7 @@ class ItemDetails extends Component{
 
     componentDidMount(){
         console.log(this.state.itemName)
-        axios.get('/ItemOverviewDetails', {
+        axios.get(process.env.REACT_APP_BASE_URL+'/ItemOverviewDetails', {
             
             params: {
                 imagename:this.state.itemName

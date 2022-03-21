@@ -35,7 +35,7 @@ class Profile extends Component{
     componentDidMount(){
 
         if(localStorage.getItem("UserProfile") === "true"){
-            axios.get('/getProfileDetails', {
+            axios.get(process.env.REACT_APP_BASE_URL+'/getProfileDetails', {
                 params:{
                     email:this.state.email
                 }
@@ -105,7 +105,7 @@ class Profile extends Component{
             phone:this.state.phone
         }
         console.log(data)
-        axios.post('/insertIntoProfile', data)
+        axios.post(process.env.REACT_APP_BASE_URL+'/insertIntoProfile', data)
         .then(response => {
             console.log(response)
         })

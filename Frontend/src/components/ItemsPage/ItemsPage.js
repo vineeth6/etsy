@@ -62,7 +62,7 @@ class ItemsPage extends Component{
             category:this.state.category,
             outofstock:"false"
         }
-        axios.get('/s3Url', {
+        axios.get(process.env.REACT_APP_BASE_URL+'/s3Url', {
             params : {
                 imagename:this.state.imagename
             }
@@ -91,7 +91,7 @@ class ItemsPage extends Component{
                 console.error(error)
             }
 
-            axios.post('/insertIntoItemInventory', data)
+            axios.post(process.env.REACT_APP_BASE_URL+'/insertIntoItemInventory', data)
             .then(response => {
                 if(response.data==='successful'){
                     this.setState({error:"Image inserted into Database"})

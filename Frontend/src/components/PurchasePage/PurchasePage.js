@@ -13,7 +13,7 @@ class PurchasePage extends Component{
     }
 
     componentDidMount(){
-        Axios.get('/getTransactionDetails',{
+        Axios.get(process.env.REACT_APP_BASE_URL+'/getTransactionDetails',{
             params:{
                 email : localStorage.getItem('email')
             }

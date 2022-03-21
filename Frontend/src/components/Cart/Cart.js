@@ -28,13 +28,13 @@ class Cart extends Component{
             email:localStorage.getItem('email'),
             cartDetails:JSON.parse(localStorage.getItem('cartDetails')),
         }
-        axios.post('/createTransactionID', data)
+        axios.post(process.env.REACT_APP_BASE_URL+'/createTransactionID', data)
         .then((response)=>{
             console.log(response)
         })
         let cartDetails = JSON.parse(localStorage.getItem('cartDetails'))
         console.log(cartDetails)
-        axios.post('/insertIntoTransaction',data)
+        axios.post(process.env.REACT_APP_BASE_URL+'/insertIntoTransaction',data)
         .then((response)=>{
             console.log(response)
         })

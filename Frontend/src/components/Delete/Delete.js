@@ -30,7 +30,7 @@ class Delete extends Component{
             itemName: this.state.itemName,
             itemPrice: this.state.itemPrice
         }
-        Axios.post('/editItemPrice',data)
+        Axios.post(process.env.REACT_APP_BASE_URL+'/editItemPrice',data)
         .then(response => {
             if(response.data === "success")
                 this.setState({error: "Item Price successfully changed"})

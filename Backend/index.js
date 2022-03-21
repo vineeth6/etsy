@@ -336,7 +336,8 @@ app.get('/getTransactionDetails', (req,res)=>{
 app.get('/searchResults', (req,res)=> {
     console.log("hehehe")
     console.log(req.query.imageLike)
-    var dbquery = `SELECT name FROM ItemInventory`
+    var dbquery = `SELECT name FROM ItemInventory WHERE name LIKE "%${req.query.imageLike}%"`
+    console.log(dbquery)
     db.query(dbquery, (err, result) =>{
         if(err) throw err
 
