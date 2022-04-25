@@ -6,14 +6,21 @@ var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var cors = require('cors');
 var mysql = require('mysql')
+var mongoose = require('mongoose')
 const generateUploadURL = require('./s3')
+const Login = require('./models/Login.js')
+const jwt = require('jsonwebtoken')
+const passport = require('passport')
+var kafka = require('./kafka/client')
 
 app.set('view engine', 'ejs');
 app.set('views', './views');
 app.use(express.static(__dirname + '/public'));
 //use cors to allow cross origin resource sharing
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+app.use(passport.initialize())
 
+require('./mypassport')
 //use express session to maintain session data
 app.use(session({
     secret              : 'cmpe273_kafka_passport_mongo',
@@ -30,6 +37,11 @@ var db = mysql.createConnection({
     password: "12345678",
     database:"etsy"
 });
+
+const dbURI = 'mongodb+srv://etsy:7F17ZlCfEoUzUvtq@cluster0.ovtrh.mongodb.net/test?retryWrites=true&w=majority'
+mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology:true})
+    .then((result) => console.log('connected to db'))
+    .catch((err)=>console.log(err))
 
 // app.use(bodyParser.urlencoded({
 //     extended: true
@@ -140,24 +152,96 @@ app.post('/delete', function(req, res){
 
 app.post('/insertIntoLogin',(req, res)=> {
 
-
+    console.log(req.body)
     let sql = `SELECT firstname,email,password FROM Login WHERE email = "${req.body.username}" and password="${req.body.password}"`
     let query = db.query(sql, (err, result) =>{
         if(err) throw err
         const results=JSON.parse(JSON.stringify(result))
+        console.log(results)
         if(results.length > 0){
 
             res.cookie('cookie',"admin",{maxAge: 900000, httpOnly: false, path : '/'});
             req.session.user = result[0].firstName;
-            res.writeHead(200,{
-                'Content-Type' : 'text/plain'
-            })
-            res.end("Successful");
+            // res.writeHead(200,{
+            //     'Content-Type' : 'text/plain'
+            // })
+            const payload = {
+                username: req.body.username
+            }
+            
+            const token = jwt.sign(payload, "Random String")
+            res.send({
+                success:true,
+                message:"Successful",
+                token: "Bearer " + token
+            });
+            return
         }
         else
             res.send('Invalid Login')
     })
 });
+
+app.post('/mongologin',(req, res)=> {
+    Login.findOne({email:req.body.username}).then(user => {
+        if(!user){
+            return res.send({
+                success:false,
+                message:"could not find the user"
+            })
+        }
+
+        if(req.body.password !== user.password){
+            return res.send({
+                success:false,
+                message: 'Invalid Login'
+            })
+        }
+
+        const payload = {
+            username: user.email,
+            id: user._id
+        }
+
+        const token = jwt.sign(payload, "Random String")
+
+        res.cookie('cookie',"admin",{maxAge: 900000, httpOnly: false, path : '/'});
+        req.session.user = user.username;
+        return res.send({
+            success:true,
+            message:"Successful",
+            token: "Bearer " + token
+        })
+    })
+
+})
+
+app.post('/mongoRegister', (req,res)=>{
+    console.log("***")
+    Login.findOne({email:req.body.email}).then(user => {
+        if(user){
+            return res.send({
+                success:false,
+                message:'existing user'
+            })
+        }
+
+    })
+
+    const login = new Login({
+        firstName: req.body.name,
+        email:req.body.email,
+        password:req.body.password
+    })
+
+    login.save()
+        .then((result)=>{
+            res.send('Successful Register')
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+})
 
 app.post('/insertIntoRegister', (req, res)=> {
 
@@ -271,89 +355,131 @@ app.post('/editItemPrice', (req, res) => {
     }
 })
 
-app.post('/insertIntoTransaction', (req, res)=>{
-    console.log(req.body)
+// app.post('/insertIntoTransaction', (req, res)=>{
+//     console.log(req.body)
     
-    let selectId = "SELECT MAX(ID) as maxID FROM TransactionID";
-    var max = []
-    db.query(selectId, (err, result) =>{
-        if(err) {
-            res.send("Unsuccessful")
-            throw err
-        }
+//     let selectId = "SELECT MAX(ID) as maxID FROM TransactionID";
+//     var max = []
+//     db.query(selectId, (err, result) =>{
+//         if(err) {
+//             res.send("Unsuccessful")
+//             throw err
+//         }
 
-        var orderId = result[0].maxID
-        var email = req.body.email
-        var transactionDetails = req.body.cartDetails
-        console.log(transactionDetails)
-        console.log(email)
-        transactionDetails.forEach(transaction => {
-            var insert = `INSERT INTO Transactions(customerEmail,orderID,itemName,quantity,shopname,price,date) VALUES ("${email}","${orderId}","${transaction.itemName}","${transaction.itemQuantity}","","${transaction.itemPrice}","")`
-            db.query(insert, (err, result) =>{
-                if(err) {
-                    //res.send("Unsuccessful")
-                    throw err
-                }
+//         var orderId = result[0].maxID
+//         var email = req.body.email
+//         var transactionDetails = req.body.cartDetails
+//         console.log(transactionDetails)
+//         console.log(email)
+//         transactionDetails.forEach(transaction => {
+//             var insert = `INSERT INTO Transactions(customerEmail,orderID,itemName,quantity,shopname,price,date) VALUES ("${email}","${orderId}","${transaction.itemName}","${transaction.itemQuantity}","","${transaction.itemPrice}","")`
+//             db.query(insert, (err, result) =>{
+//                 if(err) {
+//                     throw err
+//                 }
         
-                //res.send('successful')
-            })
-        })
-        // var insert = `INSERT INTO Transactions()`
-    })
-})
+//             })
+//         })
+//     })
+// })
 
-app.get('/homeImages', (req,res) =>{
-    var getImageNames = `SELECT name FROM ItemInventory`
-    db.query(getImageNames, (err, result) =>{
-        if(err) throw err
-
-        const results=JSON.parse(JSON.stringify(result))
-        var msg=""
-        for(i in results){
-            msg=msg.concat(results[i].name)
-            msg=msg.concat(';')
-        }
-            
-        res.send(msg)
-    })
-})
-
-app.get('/getTransactionDetails', (req,res)=>{
-    console.log('inside transaction details')
-    console.log(req.body)
-    var transactions = `SELECT * FROM Transactions WHERE customerEmail="${req.query.email}"`
-    db.query(transactions, (err, result) =>{
-        console.log('I am here')
-        if(err) throw err
-
-        const results=JSON.parse(JSON.stringify(result))
+app.post('/insertIntoTransaction', (req, res)=>{
+    kafka.make_request('Transaction', req.body, function(err, results) {
+        console.log("inside kafka make request")
         console.log(results)
-        res.send(results)
+        if (err){
+            console.log("Inside err");
+            res.send("err")
+        }
+        res.send("success")
     })
+})
 
+app.post('/insertIntoFavorites', (req, res)=>{
+    console.log("Favorites backend")
+    kafka.make_request('Favorites', req.body, function(err, results) {
+        console.log("inside kafka make request")
+        console.log(results)
+        if (err){
+            console.log("Inside err");
+            res.send("err")
+        }
+    })
+})
+
+// app.get('/homeImages', passport.authenticate('jwt',{session:false}), (req,res) =>{
+//         var getImageNames = `SELECT name FROM ItemInventory`
+//         db.query(getImageNames, (err, result) =>{
+//             if(err) throw err
+    
+//             const results=JSON.parse(JSON.stringify(result))
+//             var msg=""
+//             for(i in results){
+//                 msg=msg.concat(results[i].name)
+//                 msg=msg.concat(';')
+//             }
+                
+//             res.send(msg)
+//         })
+
+// })
+
+app.get('/homeImages', passport.authenticate('jwt',{session:false}), (req,res) =>{
+    kafka.make_request('homeImg',req.body, function(err,results){
+        console.log('in result');
+        console.log(results);
+        if (err){
+            console.log("Inside err");
+            res.send("err")
+        }else{
+            res.send(results)
+            }
+        
+    });
+
+})
+
+// app.get('/getTransactionDetails', (req,res)=>{
+//     console.log('inside transaction details')
+//     console.log(req.body)
+//     var transactions = `SELECT * FROM Transactions WHERE customerEmail="${req.query.email}"`
+//     db.query(transactions, (err, result) =>{
+//         console.log('I am here')
+//         if(err) throw err
+
+//         const results=JSON.parse(JSON.stringify(result))
+//         console.log(results)
+//         res.send(results)
+//     })
+
+// })
+
+app.get('/getTransactionDetails', (req,res) => {
+    kafka.make_request('Purchase',req.query, function(err,results){
+        console.log(results);
+        if (err){
+            console.log("Inside err");
+            res.send("err")
+        }else{
+            res.send(results)
+            }
+        
+    });
 })
 
 app.get('/searchResults', (req,res)=> {
+    kafka.make_request('search', req.query, function(err, results){
     console.log("hehehe")
-    console.log(req.query.imageLike)
-    var dbquery = `SELECT name FROM ItemInventory WHERE name LIKE "%${req.query.imageLike}%"`
-    console.log(dbquery)
-    db.query(dbquery, (err, result) =>{
-        if(err) throw err
 
-        const results=JSON.parse(JSON.stringify(result))
-        
-        var msg=""
-        for(i in results){
-            if(result[i].name.includes(req.query.imageLike)){
-            msg=msg.concat(results[i].name)
-            msg=msg.concat(';')
-            }
-        }
-            
-        console.log(msg)
-        res.send(msg)
-    })
+    if (err){
+        console.log("Inside err");
+        res.send("err")
+    }else{
+        console.log(results)
+        res.send(results)
+    }
+
+})
 
 })
 

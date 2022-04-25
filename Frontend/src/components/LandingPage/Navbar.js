@@ -2,6 +2,8 @@ import React,{Component} from 'react';
 import {Link} from 'react-router-dom';
 import cookie from 'react-cookies';
 import {Redirect} from 'react-router';
+import {connect} from 'react-redux'
+import {logout} from '../../redux/actions/'
 
 //create the Navbar Component
 class Navbar extends Component {
@@ -18,6 +20,8 @@ class Navbar extends Component {
     }
     //handle logout to destroy the cookie
     handleLogout = (e) => {
+        this.props.logout()
+        console.log("logout")
         localStorage.removeItem("email")
         localStorage.removeItem("stock1")
         localStorage.removeItem('stock2')
@@ -29,6 +33,7 @@ class Navbar extends Component {
 
     search = (e)=>{
         e.preventDefault()
+        console.log("Here")
         var searchurl = "/searchResults/".concat(this.state.searchString)
         console.log(searchurl)
         this.props.history.push(searchurl)
@@ -74,6 +79,7 @@ class Navbar extends Component {
                         <li><Link to="/ShopProfile">Shop Profile</Link></li>
                         <li><Link to="/Cart">Shopping Cart</Link></li>
                         <li><Link to='/PurchasePage'>Order History</Link></li>
+                        <li><Link to='/pagination'>Pagination</Link></li>
                     </ul>
                     {navLogin}
                 </div>
@@ -83,4 +89,11 @@ class Navbar extends Component {
     }
 }
 
-export default Navbar;
+
+const mapDispatchToProps = ()=>{
+    return {
+        logout
+    }
+}
+
+export default connect(null, mapDispatchToProps())(Navbar)

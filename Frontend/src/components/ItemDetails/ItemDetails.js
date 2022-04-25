@@ -2,6 +2,8 @@ import Axios from 'axios';
 import React, {Component} from 'react';
 import FbImageGrid from 'react-fb-image-grid'
 import axios from 'axios';
+import {connect} from 'react-redux'
+import { AddToCart } from '../../redux/actions';
 
 class ItemDetails extends Component{
     constructor(props){
@@ -21,8 +23,18 @@ class ItemDetails extends Component{
     }
 
     addToFavorites = (e) => {
+        console
+        const data = {
+            favorites: this.state.itemName,
+            user: localStorage.getItem('email')
+        }
         e.preventDefault()
         localStorage.setItem('favorites', this.state.itemName)
+        axios.post(process.env.REACT_APP_BASE_URL+'/insertIntoFavorites',data)
+            .then(response => {
+                console.log(response);
+            })
+
     }
 
     onQuantityChange = (e) =>{
@@ -48,12 +60,13 @@ class ItemDetails extends Component{
         if(quantity>0 && price>0){
             var storedCart = JSON.parse(localStorage.getItem("cartDetails"))
 
-            var element = {itemName:this.state.itemName, itemQuantity:this.state.quantityDemand, itemPrice:price}
+            var element = {itemName:this.state.itemName, itemQuantity:this.state.quantityDemand, itemPrice:price, message:""}
             storedCart.push(element)
 
             console.log(storedCart)
 
             localStorage.setItem("cartDetails", JSON.stringify(storedCart))
+            this.props.AddToCart(element)
         }
 
         if(this.state.itemName === "X1-Table")
@@ -115,6 +128,10 @@ class ItemDetails extends Component{
                             <div class="form-group">
                                 <input type='text' class="form-group" onChange={this.onQuantityChange} placeholder="Item Quantity"/>
                             </div>
+                            <div class="form-group">
+                            <text>Gift Wrap:  </text>
+                                <input type='checkbox' class='form-group'></input> 
+                            </div>
                             <div style={{ color: "red" }}>{this.state.error1}</div>
                             <div style={{ color: "red" }}>{this.state.error2}</div>
                             <div class="form-group">
@@ -133,4 +150,10 @@ class ItemDetails extends Component{
     }
 }
 
-export default ItemDetails
+function mapDispatchToProps(dispatch){
+    return{
+        AddToCart: ItemDetails=>dispatch(AddToCart(ItemDetails))
+    }
+}
+
+export default connect(null,mapDispatchToProps)(ItemDetails)

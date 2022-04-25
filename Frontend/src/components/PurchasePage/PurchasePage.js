@@ -39,6 +39,7 @@ class PurchasePage extends Component{
                     <td>{item.itemName}</td>
                     <td>{item.quantity}</td>
                     <td>{item.price}</td>
+                    <td>{item.shopname}</td>
                 </tr>
             )
             }
@@ -55,6 +56,7 @@ class PurchasePage extends Component{
                                     <th>ItemName</th>
                                     <th>Quantity</th>
                                     <th>Price for the quantity ordered</th>
+                                    <th>Gift Message</th>
                                 </tr>
                             </thead>
                             <tbody>

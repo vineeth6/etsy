@@ -47,6 +47,26 @@ class register extends Component{
 
 
 
+        axios.post(process.env.REACT_APP_BASE_URL+'/mongoRegister',data)
+        .then(response => {
+            console.log("Status Code : ",response.status);
+            if(response.data === "Successful Register"){
+                this.setState({
+                    error:"Registration Successful"
+                })
+            }
+            else if(response.data === 'existing user'){
+                this.setState({
+                    error:"email id is already existing"
+                })
+            }
+            else{
+                this.setState({
+                    error:"Registration Unsuccessful"
+                })
+            }
+        });
+
         axios.post(process.env.REACT_APP_BASE_URL+'/insertIntoRegister',data)
         .then(response => {
             console.log("Status Code : ",response.status);

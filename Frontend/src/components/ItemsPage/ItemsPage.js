@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import s3 from 'react-aws-s3'
+import {incrementCount, decrementCount,logout} from '../../redux/actions/'
+import {connect} from 'react-redux'
 
-class ItemsPage extends Component{
+class ItemsPage1 extends Component{
     constructor(props){
         super(props)
 
@@ -120,6 +121,7 @@ class ItemsPage extends Component{
 
         const {error} = this.state
         console.log(this.props.location.pathname)
+        console.log(this.props)
         return(
             <div>
                 <div class='container'>
@@ -151,7 +153,12 @@ class ItemsPage extends Component{
                             <div class="form-group">
                                 <button class="form-group" onClick={this.Upload}>Upload</button>
                             </div>
-
+                            <div>
+                                <div>{this.props.count1}</div>
+                                <p>
+                                    <button onClick={()=>this.props.logout()}>+</button>
+                                </p>
+                            </div>
                         </div>
 
                     </div>
@@ -161,4 +168,21 @@ class ItemsPage extends Component{
     }
 }
 
+const mapStateToProps = (state) => {
+    console.log('Heyyy')
+    console.log(state.count)
+    return {
+        count1:state.count
+    }
+}
+
+const mapDispatchToProps = ()=>{
+    return{
+        incrementCount,
+        decrementCount,
+        logout
+    }
+}
+
+const ItemsPage = connect(mapStateToProps, mapDispatchToProps())(ItemsPage1);
 export default ItemsPage

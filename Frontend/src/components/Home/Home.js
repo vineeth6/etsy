@@ -16,7 +16,10 @@ class Home extends Component {
     //get the books data from backend  
     componentDidMount(){
         console.log(process.env.REACT_APP_BASE_URL)
-        axios.get(process.env.REACT_APP_BASE_URL+'/homeImages')
+        const tok = localStorage.getItem('token')
+        axios.get(process.env.REACT_APP_BASE_URL+'/homeImages', {headers:{
+            Authorization:tok
+        }})
                 .then((response) => {
                 console.log(response)
                 this.setState({

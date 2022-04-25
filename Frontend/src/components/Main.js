@@ -14,6 +14,7 @@ import Cart from './Cart/Cart'
 import PurchasePage from './PurchasePage/PurchasePage'
 import searchResults from './searchResults/searchResults'
 import favorites from './favorites/favorites'
+import Pagination from './Purchase Pagination/Pagination'
 
 //Create a Main Component
 class Main extends Component {
@@ -35,6 +36,7 @@ class Main extends Component {
                 <Route path="/PurchasePage" component={PurchasePage}/>
                 <Route path="/searchResults" component={searchResults}/>
                 <Route path="/favorites" component={favorites}/>
+                <Route path="/pagination" component={Pagination}/>
             </div>
         )
     }

@@ -3,6 +3,9 @@ import '../../App.css';
 import axios from 'axios';
 import cookie from 'react-cookies';
 import {Redirect, Link} from 'react-router-dom';
+import {connect} from 'react-redux'
+import {login} from '../../redux/actions/'
+
 
 //Define a Login Component
 class Login extends Component{
@@ -52,10 +55,37 @@ class Login extends Component{
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post(process.env.REACT_APP_BASE_URL+'/insertIntoLogin',data)
+        // axios.post(process.env.REACT_APP_BASE_URL+'/insertIntoLogin',data)
+        // axios.post(process.env.REACT_APP_BASE_URL+'/mongologin',data)
+        //     .then(response => {
+        //         console.log(response)
+        //         console.log("Status Code : ",response.status);
+        //         if(response.data.message === "Successful"){
+        //             this.setState({
+        //                 authFlag : true,
+        //                 error:""
+        //             })
+        //             const username = this.state.username
+        //             const auth = this.state.auth
+        //             console.log(username)
+        //             localStorage.setItem('token', response.data.token)
+        //             localStorage.setItem("email",username)
+        //             this.props.login({username,auth})
+        //             cookie.load('cookie')
+        //         }else{
+        //             this.setState({
+        //                 authFlag : false,
+        //                 error:"Invalid Username and Password"
+        //             })
+        //             cookie.load('cookie')
+        //         }
+        //     });
+
+            axios.post(process.env.REACT_APP_BASE_URL+'/insertIntoLogin',data)
             .then(response => {
                 console.log("Status Code : ",response.status);
-                if(response.data === "Successful"){
+                console.log(response)
+                if(response.data.message === "Successful"){
                     this.setState({
                         authFlag : true,
                         error:""
@@ -111,4 +141,14 @@ class Login extends Component{
     }
 }
 //export Login Component
-export default Login;
+
+
+function mapDispatchToProps(dispatch){
+    console.log(dispatch)
+    return{
+        login: Login => dispatch(login(Login))
+    }
+    
+}
+
+export default connect(null, mapDispatchToProps)(Login);

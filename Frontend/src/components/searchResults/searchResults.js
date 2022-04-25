@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import axios from 'axios';
+import {connect} from 'react-redux'
 
 class searchResults extends Component{
     constructor(props){
@@ -36,6 +37,7 @@ class searchResults extends Component{
         //if not logged in go to login page
         return(
             <div>
+                <h1>Hi, {this.props.login.username}. Here are your Search Results</h1>
             <div style={{width:"1200px", margin:"auto", display:"grid", gridTemplateColumns:"repeat(4, 1fr)", gap:"10px"}}>
                 {imageNameArray.map((imagename) => (
                     <div 
@@ -56,4 +58,10 @@ class searchResults extends Component{
     }
 }
 
-export default searchResults
+const mapStateToProps = (state)=>{
+    return{
+        login:state.login
+    }
+}
+
+export default connect(mapStateToProps,null)(searchResults)

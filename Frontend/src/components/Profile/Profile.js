@@ -4,6 +4,8 @@ import {CountryDropdown} from 'react-country-region-selector'
 import axios from 'axios';
 import cookie from 'react-cookies';
 import {Link} from 'react-router-dom';
+import {connect} from 'react-redux'
+import {login} from '../../redux/actions'
 
 
 class Profile extends Component{
@@ -126,7 +128,8 @@ class Profile extends Component{
                         </div>
                             <div class="form-group">
                                 <text>Name</text>
-                                <input onChange={this.changeUsername} type="text" class="form-control" name="name" placeholder={this.state.username}/>
+                                {/* <input onChange={this.changeUsername} type="text" class="form-control" name="name" placeholder={this.state.username}/> */}
+                                <input onChange={this.changeUsername} type="text" class="form-control" name="name" placeholder={this.props.login.username}/>
                             </div>
                             <div class="form-group" onChange={this.setGender}>
                                 <text>Gender </text>
@@ -167,4 +170,11 @@ class Profile extends Component{
     }
 }
 
-export default Profile;
+
+const mapStateToProps = (state)=>{
+    return{
+        login: state.login
+    }
+}
+
+export default connect(mapStateToProps,null)(Profile)
